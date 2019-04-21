@@ -1,4 +1,4 @@
-import cv2,os
+import cv2, os
 import numpy as np
 from PIL import Image
 
@@ -26,7 +26,7 @@ def get_images_and_labels(path):
 
 
 images, labels = get_images_and_labels(path)
-cv2.imshow('test',images[0])
+cv2.imshow('test', images[0])
 cv2.waitKey(1)
 
 recognizer.train(images, np.array(labels))
