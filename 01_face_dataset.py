@@ -12,6 +12,18 @@ Developed by Marcelo Rovai - MJRoBot.org @ 21Feb18
 import cv2
 import os
 
+def kisiSayisiGetir():
+    dosya = open('isimler.txt')
+    isimler = dosya.read()
+    kisiSayisi = isimler.split(',')
+    print("kisi sayisi : ")
+    print(str(len(kisiSayisi)))
+    return len(kisiSayisi)
+def kisiKaydet(isim):
+    dosya = open('isimler.txt', 'a')
+    dosya.write(',')
+    dosya.write(isim)
+
 cam = cv2.VideoCapture(0)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
@@ -19,8 +31,12 @@ cam.set(4, 480) # set video height
 face_detector = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 # For each person, enter one numeric face id
-face_id = input('\n kullanici id si girin ==>  ')
+#face_id = input('\n kullanici id si girin ==>  ')
 
+face_id = kisiSayisiGetir()
+print("yeni kisinin id si : ", face_id)
+kisiAdi = input("Kisi Adı Ekleyiniz: ")
+kisiKaydet(kisiAdi)
 print("\n [INFO] Fotograf cekilmeye basladi.\nkameraya bak ve\nbaşını yavaşça sağa sola yukarı ve aşağıya hareket ettir\n...")
 # Initialize individual sampling face count
 count = 0
