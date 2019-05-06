@@ -10,7 +10,6 @@ Developed by Marcelo Rovai - MJRoBot.org @ 21Feb18
 '''
 
 import cv2
-import os
 
 def kisiSayisiGetir():
     dosya = open('isimler.txt')

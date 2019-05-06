@@ -1,22 +1,20 @@
 ''''
 Real Time Face Recogition
-	==> Each face stored on dataset/ dir, should have a unique numeric integer ID as 1, 2, 3, etc                       
+	==> Each face stored on dataset/ dir, should have a unique numeric integer ID as 1, 2, 3, etc
 	==> LBPH computed model (trained faces) should be on trainer/ dir
-Based on original code by Anirban Kar: https://github.com/thecodacus/Face-Recognition    
+Based on original code by Anirban Kar: https://github.com/thecodacus/Face-Recognition
 
-Developed by Marcelo Rovai - MJRoBot.org @ 21Feb18  
+Developed by Marcelo Rovai - MJRoBot.org @ 21Feb18
 
 '''
 
 import cv2
-import numpy as np
-import os 
-import time
 import serial #arduino için
 
 def yuzbul():
     seri = serial.Serial() #arduino için
     seri.port = "com6"
+
     seri.open()
 
     recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -58,19 +56,24 @@ def yuzbul():
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             id, confidence = recognizer.predict(gray[y:y + h, x:x + w])
             # Check if confidence is less them 100 ==> "0" is perfect match
-            if (confidence <= 49):
+            if (confidence <= 35):
                 # id = names[id]    # isim görünsün istiyorsanız
                 id = "Hosgeldiniz..."
                 confidence = "  {0}---".format(round(100 - confidence))
                 try:
                     seri.write(1)  # arduino için
                 except:
-                    #calisma = False
-                    print("-H--A--T--A---H--A--T--A---H--A--T--A")
-                    seri.setPort("com6")
+                    try:
+                        # calisma = False
+                        seri.setPort("com6")
+                        seri.write(0)
+                    except:
+                        seri.setPort("com6")
+                        print("-H--A--T--A---H--A--T--A---H--A--T--A")
             else:
+                seri.write(0)
                 seri.setPort("com6")
-                id = "Kimsin Sen"
+                id = "Taninmiyor"
                 confidence = "  {0},".format(round(100 - confidence))
             cv2.putText(img, str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
             cv2.putText(img, str(confidence), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
@@ -78,7 +81,6 @@ def yuzbul():
         k = cv2.waitKey(10) & 0xff  # Press 'ESC' for exiting video
         if k == 27:
             break
-    # Do a bit of cleanup
     print("\n [INFO] Exiting Program and cleanup stuff")
     cam.release()
     cv2.destroyAllWindows()
